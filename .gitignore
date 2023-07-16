@@ -1,2 +1,13 @@
-build/
+# Ignore build directories
+/build/
+/bin/
+/lib/
+
+# Ignore generated files
+*.o
+*.exe
+*.dll
+*.so
+*.dylib
+
 serv
