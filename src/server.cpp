@@ -60,23 +60,22 @@ int Server::listen() {
     routeHandler handler = parseRequest(buffer);
 
     // call handler function?
-    if(handler==nullptr){
-        printf("%s\n", "Route not found!");
+    if (handler == nullptr) {
+      printf("%s\n", "Route not found!");
     } else {
-        handler();
+      handler();
     }
-
   }
 
   return 0;
 }
 
-void Server::addRoute(const std::string &path, routeHandler handler) {
+void Server::use(const std::string &path, routeHandler handler) {
   std::cout << "Adding a route: " << path << std::endl;
 
-  if(path.size()<1){
-      std::cout << "Invalid path. Path should be atleast 2 in length? TODO\n";
-      return;
+  if (path.size() < 1) {
+    std::cout << "Invalid path. Path should be atleast 2 in length? TODO\n";
+    return;
   }
 
   std::string copyPath = path;
@@ -86,13 +85,29 @@ void Server::addRoute(const std::string &path, routeHandler handler) {
   routes.insert(std::pair<std::string, routeHandler>(copyPath, handler));
 }
 
-routeHandler Server::parseRequest(const std::string &request) {
-    // search through the route list and return a handler. if not found?
-    
-    auto it = routes.find(request);
-    if(it!=routes.end()){
-        return it->second;
-    }
+/*
+ *
+POST /api/users HTTP/1.1
+Host: api.example.com
+Content-Type: application/json
+Authorization: Bearer YOUR_ACCESS_TOKEN
 
-    return nullptr;
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "age": 30
+}
+ *
+ */
+routeHandler Server::parseRequest(const std::string &request) {
+  // search through the route list and return a handler. if not found?
+  // search for VERB
+ 
+
+  auto it = routes.find(request);
+  if (it != routes.end()) {
+    return it->second;
+  }
+
+  return nullptr;
 }

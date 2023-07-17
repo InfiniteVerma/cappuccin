@@ -19,10 +19,10 @@ public:
   int listen();
 
   /*
-   * Add a route
+   * Add a route // TODO update this comment
    *
    */
-  void addRoute(const std::string &path, routeHandler handler);
+  void use(const std::string &path, routeHandler handler);
 
   /*
    * Parse a new request. 

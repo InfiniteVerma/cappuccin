@@ -31,7 +31,7 @@ void runServer() {
   Server server;
 
   // add routes
-  server.addRoute("/test", testRoutes);
+  server.use("/test", testRoutes);
 
   cout << server.listen();
 }
