@@ -10,7 +10,7 @@ public:
    * Connect to a socker and listen to requests
    *
    */
-  int connect();
+  int listen();
 };
 
 #endif

@@ -4,8 +4,9 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <unistd.h>
 
-int Server::connect() {
+int Server::listen() {
 
   int fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -35,14 +36,25 @@ int Server::connect() {
     return -1;
   }
 
-  if (listen(fd, 5) == -1) {
+  if (::listen(fd, 5) == -1) {
     std::cerr << "Could not listen" << std::endl;
     return -1;
   }
 
-  if (accept(fd, (struct sockaddr *)&addr, (socklen_t *)&addrLen) == -1) {
-    std::cerr << "Could not accept" << std::endl;
-    return -1;
+  while (true) {
+
+    int client_socket =
+        accept(fd, (struct sockaddr *)&addr, (socklen_t *)&addrLen);
+
+    if (client_socket == -1) {
+      std::cerr << "Could not accept" << std::endl;
+      return -1;
+    }
+
+    // handle connection
+    char buffer[1024] = {0};
+    ssize_t valread = read(client_socket, buffer, 1024);
+    printf("%s\n", buffer);
   }
 
   return 0;
