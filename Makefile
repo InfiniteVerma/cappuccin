@@ -15,7 +15,7 @@ SOURCES := $(wildcard $(SRC_DIR)/*.cpp)
 OBJECTS := $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SOURCES))
 
 # Library name
-LIBRARY_NAME := libmy_http_server.a
+LIBRARY_NAME := libcappuccin.a
 
 # Default target
 all: $(BUILD_DIR) $(LIBRARY_NAME) www_files tests
