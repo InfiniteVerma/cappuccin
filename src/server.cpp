@@ -55,7 +55,44 @@ int Server::listen() {
     char buffer[1024] = {0};
     ssize_t valread = read(client_socket, buffer, 1024);
     printf("%s\n", buffer);
+
+    // TODO parse request
+    routeHandler handler = parseRequest(buffer);
+
+    // call handler function?
+    if(handler==nullptr){
+        printf("%s\n", "Route not found!");
+    } else {
+        handler();
+    }
+
   }
 
   return 0;
+}
+
+void Server::addRoute(const std::string &path, routeHandler handler) {
+  std::cout << "Adding a route: " << path << std::endl;
+
+  if(path.size()<1){
+      std::cout << "Invalid path. Path should be atleast 2 in length? TODO\n";
+      return;
+  }
+
+  std::string copyPath = path;
+  copyPath.erase(0, 1);
+
+  // add it to list
+  routes.insert(std::pair<std::string, routeHandler>(copyPath, handler));
+}
+
+routeHandler Server::parseRequest(const std::string &request) {
+    // search through the route list and return a handler. if not found?
+    
+    auto it = routes.find(request);
+    if(it!=routes.end()){
+        return it->second;
+    }
+
+    return nullptr;
 }

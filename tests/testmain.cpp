@@ -10,6 +10,12 @@ using namespace std;
 void dummyClient();
 void runServer();
 
+// TODO
+void testRoutes(){
+    // library calls to generate response in a good way
+    std::cout << "Get request response";
+}
+
 int main() {
   std::thread server(runServer);
   std::thread client(dummyClient);
@@ -20,13 +26,12 @@ int main() {
 
 void runServer() {
   std::cout << "Starting server\n";
+
   // create server object
   Server server;
 
   // add routes
-  // server.addRoute("/test", testFunc);
-
-  // response code?
+  server.addRoute("/test", testRoutes);
 
   cout << server.listen();
 }
@@ -51,6 +56,7 @@ void dummyClient() {
     close(client_socket);
     return;
   }
+
   const char *message = "GET /hello HTTP/1.1\r\n"
                         "Host: www.example.com\r\n"
                         "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; "
@@ -60,10 +66,12 @@ void dummyClient() {
 
   int message_len = strlen(message);
   int bytes_sent = send(client_socket, message, message_len, 0);
+
   if (bytes_sent == -1) {
     std::cerr << "Error sending data to the server." << std::endl;
   } else {
     std::cout << "Sent " << bytes_sent << " bytes to the server." << std::endl;
   }
+
   close(client_socket);
 }
