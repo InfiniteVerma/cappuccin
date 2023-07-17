@@ -3,13 +3,14 @@
 
 #include <string>
 #include <map>
+#include "route.h"
 
-typedef void (*routeHandler)();
+// typedef void (*routeHandler)(); TODO move this somewhere else?
 
 class Server {
 private:
   const int PORT = 8080;
-  std::map<std::string, routeHandler> routes;
+  std::map<std::string, Route> routes;
 
 public:
   /*
@@ -22,7 +23,7 @@ public:
    * Add a route // TODO update this comment
    *
    */
-  void use(const std::string &path, routeHandler handler);
+  void use(const std::string &path, Route route);
 
   /*
    * Parse a new request. 
@@ -30,7 +31,7 @@ public:
    * Output: routeHandler
    *
    */
-  routeHandler parseRequest(const std::string &request);
+  Route parseRequest(const std::string &request);
 };
 
 #endif

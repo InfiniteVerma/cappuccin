@@ -57,20 +57,20 @@ int Server::listen() {
     printf("%s\n", buffer);
 
     // TODO parse request
-    routeHandler handler = parseRequest(buffer);
+    Route handler = parseRequest(buffer);
 
     // call handler function?
-    if (handler == nullptr) {
-      printf("%s\n", "Route not found!");
-    } else {
-      handler();
-    }
+    //if (handler == nullptr) {
+    //  printf("%s\n", "Route not found!");
+    //} else {
+    //  handler();
+    //}
   }
 
   return 0;
 }
 
-void Server::use(const std::string &path, routeHandler handler) {
+void Server::use(const std::string &path, Route route) {
   std::cout << "Adding a route: " << path << std::endl;
 
   if (path.size() < 1) {
@@ -82,7 +82,7 @@ void Server::use(const std::string &path, routeHandler handler) {
   copyPath.erase(0, 1);
 
   // add it to list
-  routes.insert(std::pair<std::string, routeHandler>(copyPath, handler));
+  routes.insert(std::pair<std::string, Route>(copyPath, route));
 }
 
 /*
@@ -99,7 +99,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 }
  *
  */
-routeHandler Server::parseRequest(const std::string &request) {
+Route Server::parseRequest(const std::string &request) {
   // search through the route list and return a handler. if not found?
   // search for VERB
  
@@ -109,5 +109,7 @@ routeHandler Server::parseRequest(const std::string &request) {
     return it->second;
   }
 
-  return nullptr;
+  // TODO do something about this
+  Route route;
+  return route;
 }

@@ -1,9 +1,12 @@
-#include "server.h"
 #include <arpa/inet.h>
 #include <cstring>
 #include <iostream>
 #include <thread>
 #include <unistd.h>
+
+// library header files
+#include "server.h"
+#include "route.h"
 
 using namespace std;
 
@@ -11,9 +14,13 @@ void dummyClient();
 void runServer();
 
 // TODO
-void testRoutes(){
+Route testRoutes(){
     // library calls to generate response in a good way
-    std::cout << "Get request response";
+    
+    Route route;
+    route.get("/"); // TODO add second arg
+
+    return route;
 }
 
 int main() {
@@ -31,7 +38,7 @@ void runServer() {
   Server server;
 
   // add routes
-  server.use("/test", testRoutes);
+  server.use("/test", testRoutes());
 
   cout << server.listen();
 }
