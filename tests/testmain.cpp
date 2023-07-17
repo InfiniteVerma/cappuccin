@@ -4,6 +4,6 @@ using namespace std;
 int main()
 {
     Server server;
-    cout << server.testFunc();
+    cout << server.connect();
     cout << "Hello from tests";
 }

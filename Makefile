@@ -5,7 +5,7 @@ LDFLAGS :=
 
 # Directories
 SRC_DIR := src
-INCLUDE_DIR := include
+INCLUDE_DIR := src # include
 BUILD_DIR := build
 WWW_DIR := www
 TESTS_DIR := tests
