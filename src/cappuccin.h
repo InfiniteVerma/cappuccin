@@ -2,6 +2,7 @@
 #define CAPPUCCIN_H
 
 #include "server.h"
+#include "route.h"
 
 class Cappuccin {
 
@@ -11,6 +12,12 @@ public:
    *
    */
   Server createApplication();
+
+  /*
+   * Creates and returns a router object
+   *
+   */
+  Route createRoute();
 
   static Cappuccin &getInstance();
 

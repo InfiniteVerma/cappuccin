@@ -5,8 +5,6 @@
 #include <unistd.h>
 
 // library header files
-#include "server.h"
-#include "route.h"
 #include "cappuccin.h"
 
 using namespace std;
@@ -14,11 +12,11 @@ using namespace std;
 void dummyClient();
 void runServer();
 
-// TODO
 Route testRoutes(){
-    // library calls to generate response in a good way
-    
-    Route route;
+    // TODO library calls to generate response in a good way
+   
+    Route route = Cappuccin::getInstance().createRoute();
+
     route.get("/"); // TODO add second arg
 
     return route;

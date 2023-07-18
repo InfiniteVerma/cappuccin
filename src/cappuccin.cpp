@@ -13,3 +13,5 @@ Cappuccin &Cappuccin::getInstance() {
 }
 
 Server Cappuccin::createApplication() { return Server(); }
+
+Route Cappuccin::createRoute() { return Route(); }
