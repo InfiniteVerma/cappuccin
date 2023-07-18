@@ -14,7 +14,7 @@ private:
 
 public:
   /*
-   * Connect to a socker and listen to requests
+   * Connect to a socket and listen to requests
    *
    */
   int listen();

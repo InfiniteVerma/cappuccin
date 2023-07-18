@@ -60,7 +60,7 @@ int Server::listen() {
     Route handler = parseRequest(buffer);
 
     // call handler function?
-    //if (handler == nullptr) {
+    // if (handler == nullptr) {
     //  printf("%s\n", "Route not found!");
     //} else {
     //  handler();
@@ -102,7 +102,6 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 Route Server::parseRequest(const std::string &request) {
   // search through the route list and return a handler. if not found?
   // search for VERB
- 
 
   auto it = routes.find(request);
   if (it != routes.end()) {

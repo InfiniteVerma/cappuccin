@@ -7,6 +7,7 @@
 // library header files
 #include "server.h"
 #include "route.h"
+#include "cappuccin.h"
 
 using namespace std;
 
@@ -35,7 +36,7 @@ void runServer() {
   std::cout << "Starting server\n";
 
   // create server object
-  Server server;
+  Server server = Cappuccin::getInstance().createApplication();
 
   // add routes
   server.use("/test", testRoutes());
