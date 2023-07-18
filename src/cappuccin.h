@@ -1,8 +1,8 @@
 #ifndef CAPPUCCIN_H
 #define CAPPUCCIN_H
 
-#include "server.h"
 #include "route.h"
+#include "server.h"
 
 class Cappuccin {
 
@@ -19,17 +19,20 @@ public:
    */
   Route createRoute();
 
+  /*
+   * Returns Cappuccin object.
+   */
   static Cappuccin &getInstance();
 
   /*
-   * Deleting the copy constructor and assignment operator to prevent copying
+   * Deleting the copy constructor and assignment operator to keep it a
+   * singleton class
    *
    */
   Cappuccin(const Cappuccin &) = delete;
   Cappuccin &operator=(const Cappuccin &) = delete;
 
 private:
-
   /*
    * Making constructor private to make this a singleton class
    */

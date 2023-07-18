@@ -12,14 +12,14 @@ using namespace std;
 void dummyClient();
 void runServer();
 
-Route testRoutes(){
-    // TODO library calls to generate response in a good way
-   
-    Route route = Cappuccin::getInstance().createRoute();
+Route testRoutes() {
+  // TODO library calls to generate response in a good way
 
-    route.get("/"); // TODO add second arg
+  Route route = Cappuccin::getInstance().createRoute();
 
-    return route;
+  route.get("/"); // TODO add second arg
+
+  return route;
 }
 
 int main() {
