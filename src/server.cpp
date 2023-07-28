@@ -103,6 +103,25 @@ Route Server::parseRequest(const std::string &request) {
   // search through the route list and return a handler. if not found?
   // search for VERB
 
+  // very unoptimised currently
+  // GET/POST/PUT/DELETE/PATCH
+
+  if (request.size() < 1) {
+    return Route();
+  }
+
+  if (request[0] == 'G') {
+    std::cout << "Considering it a get request" << std::endl;
+  } else if (request[0] == 'P' && request[1] == 'O') {
+    std::cout << "Considering it a port request" << std::endl;
+  } else if (request[0] == 'P' && request[1] == 'U') {
+    std::cout << "Considering it a put request" << std::endl;
+  } else if (request[0] == 'D') {
+    std::cout << "Considering it a delete request" << std::endl;
+  } else {
+    std::cout << "Considering it a patch request" << std::endl;
+  }
+
   auto it = routes.find(request);
   if (it != routes.end()) {
     return it->second;
