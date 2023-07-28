@@ -2,7 +2,7 @@
 
 A HTTP Server library written in C++ taking express.js as inspiration. 
 
-### Why Cappuccin?
+### Why name it 'Cappuccin'?
 
 Express seemed like espresso - o. So I made this project's name Cappuccin (which is cappuccino - o) :)
 
