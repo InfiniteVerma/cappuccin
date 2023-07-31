@@ -65,12 +65,19 @@ int Server::listen() {
     std::cout << "Server::listen sending response: " << response << std::endl;
 
     char responseBuffer[1024] = {0};
-    strcpy(responseBuffer, response.c_str());
+    std::string responseFirst = "HTTP/1.1 200 OK\r\n"
+                  "Content-Type: application/json\r\n\r\n";
+
+    std::string finalResponse = responseFirst + response;
+
+    strcpy(responseBuffer, finalResponse.c_str());
+
+    std::cout << "Server::listen sendingResponse: " << responseBuffer << std::endl;
 
     std::cout << "Server::listen processed request" << std::endl;
 
     // TODO send response back to socket
-    ssize_t valsend = send(client_socket, responseBuffer, response.length(), 0);
+    ssize_t valsend = send(client_socket, responseBuffer, finalResponse.length(), 0);
 
     close(client_socket); // Close the client socket after sending the response
   }
