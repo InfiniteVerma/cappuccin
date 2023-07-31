@@ -6,6 +6,7 @@
 #include "route.h"
 
 // typedef void (*routeHandler)(); TODO move this somewhere else?
+typedef std::string (*FUNCTION)(void);
 
 class Server {
 private:
@@ -31,7 +32,7 @@ public:
    * Output: routeHandler
    *
    */
-  Route parseRequest(const std::string &request);
+  FUNCTION parseRequest(const std::string &request);
 };
 
 #endif

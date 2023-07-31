@@ -12,12 +12,16 @@ using namespace std;
 void dummyClient();
 void runServer();
 
+// Controllers
+void getData() { cout << "THIS IS RESPONSE"; }
+// ------------------
+
 Route testRoutes() {
   // TODO library calls to generate response in a good way
 
   Route route = Cappuccin::getInstance().createRoute();
 
-  route.get("/"); // TODO add second arg
+  route.get("/", getData); // TODO add second arg
 
   return route;
 }
@@ -37,7 +41,7 @@ void runServer() {
   Server server = Cappuccin::getInstance().createApplication();
 
   // add routes
-  server.use("/test", testRoutes());
+  server.use("/hello", testRoutes());
 
   cout << server.listen();
 }
@@ -78,6 +82,8 @@ void dummyClient() {
   } else {
     std::cout << "Sent " << bytes_sent << " bytes to the server." << std::endl;
   }
+
+  std::cout << "DONE" << std::endl;
 
   close(client_socket);
 }

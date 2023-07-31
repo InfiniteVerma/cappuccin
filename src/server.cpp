@@ -2,6 +2,7 @@
 #include <arpa/inet.h>
 #include <iostream>
 #include <netinet/in.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -57,32 +58,48 @@ int Server::listen() {
     printf("%s\n", buffer);
 
     // TODO parse request
-    Route handler = parseRequest(buffer);
+    FUNCTION handlerFunc = parseRequest(buffer);
 
-    // call handler function?
-    // if (handler == nullptr) {
-    //  printf("%s\n", "Route not found!");
-    //} else {
-    //  handler();
-    //}
+    std::string response = handlerFunc();
+
+    std::cout << "Server::listen sending response: " << response << std::endl;
+
+    char responseBuffer[1024] = {0};
+    strcpy(responseBuffer, response.c_str());
+
+    std::cout << "Server::listen processed request" << std::endl;
+
+    // TODO send response back to socket
+    ssize_t valsend = send(client_socket, responseBuffer, response.length(), 0);
+
+    close(client_socket); // Close the client socket after sending the response
   }
 
   return 0;
 }
 
 void Server::use(const std::string &path, Route route) {
-  std::cout << "Adding a route: " << path << std::endl;
+
+  std::cout << "Server::use BEGIN path: " << path << std::endl;
 
   if (path.size() < 1) {
-    std::cout << "Invalid path. Path should be atleast 2 in length? TODO\n";
+    std::cout << "Invalid path. Path should be atleast 2 in length? TODO THROW "
+                 "ERROR?\n";
     return;
   }
 
   std::string copyPath = path;
   copyPath.erase(0, 1);
 
+  std::cout << "Adding route: " << copyPath << std::endl;
+  std::cout << "This has below controllers: " << std::endl;
+
+  route.prettyPrint();
+
   // add it to list
   routes.insert(std::pair<std::string, Route>(copyPath, route));
+
+  std::cout << "Server::use END" << std::endl;
 }
 
 /*
@@ -99,19 +116,32 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 }
  *
  */
-Route Server::parseRequest(const std::string &request) {
+FUNCTION Server::parseRequest(const std::string &request) {
+
   // search through the route list and return a handler. if not found?
   // search for VERB
+  std::string tempRequest = request;
+  bool isGet = false; // TODO make this enum
 
-  // very unoptimised currently
+  // TODO very unoptimised currently
   // GET/POST/PUT/DELETE/PATCH
 
   if (request.size() < 1) {
-    return Route();
+    return Route::return404();
   }
 
   if (request[0] == 'G') {
     std::cout << "Considering it a get request" << std::endl;
+
+    // consume "GET "
+    if (request.length() > 4) {
+      tempRequest = tempRequest.substr(4);
+    } else {
+      return Route::return404();
+    }
+
+    isGet = true;
+
   } else if (request[0] == 'P' && request[1] == 'O') {
     std::cout << "Considering it a port request" << std::endl;
   } else if (request[0] == 'P' && request[1] == 'U') {
@@ -122,12 +152,38 @@ Route Server::parseRequest(const std::string &request) {
     std::cout << "Considering it a patch request" << std::endl;
   }
 
-  auto it = routes.find(request);
+  std::cout << "Finding request: " << tempRequest << std::endl;
+
+  // Next, getting path from the request
+
+  // removing the slash in the beginning
+  tempRequest = tempRequest.substr(1);
+
+  size_t spacePos = tempRequest.find(" ");
+  std::string routePath = "";
+
+  if (spacePos != std::string::npos) {
+    routePath = tempRequest.substr(0, spacePos);
+    tempRequest = tempRequest.substr(spacePos + 1);
+  } else {
+    std::cout << "ERR: INVALID REQUEST TODO" << std::endl;
+    return Route::return404();
+  }
+
+  // Finding path from registered routes
+
+  auto it = routes.find(routePath);
+  std::cout << "Searching for routePath " << routePath << std::endl;
   if (it != routes.end()) {
-    return it->second;
+
+    // Found route. Now returning it's routeHandler
+    std::cout << "Found route!" << std::endl;
+  } else {
+
+    // Not found path. Returning 404 response
+    std::cout << "Not found it->second" << std::endl;
   }
 
   // TODO do something about this
-  Route route;
-  return route;
+  return Route::return404();
 }
