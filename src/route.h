@@ -1,26 +1,29 @@
 #ifndef HTTP_ROUTE
 #define HTTP_ROUTE
 
+#include "request.h"
+#include "response.h"
 #include <map>
 #include <string>
 
 // TODO this is defined multiple places. Make a common_defs.h file
-typedef std::string (*FUNCTION)(void);
+typedef std::string (*FUNCTION)(Request, Response);
 
 class Route {
 
 private:
-  std::map<std::string, void (*)(void)> routes;
+  std::map<std::string, FUNCTION> routes;
 
 public:
   // TODO pass req, res in params of second arg
-  void get(const std::string &path,
-           void (*f)(void) /* TODO add controller callback */);
+  void get(const std::string &path, FUNCTION handler);
 
   void prettyPrint();
 
   // TODO pass custom message?
-  static FUNCTION return404();
+  static std::string return404();
+
+  std::string execute(Request request, Response response, const std::string &path);
 };
 
 #endif // !HTTP_ROUTE

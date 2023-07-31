@@ -1,9 +1,15 @@
 #include "route.h"
 #include <iostream>
 
-void Route::get(const std::string &path, void (*f)(void)) {
+void Route::get(const std::string &path, FUNCTION handler) {
   std::cout << "Route::get called with path " << path << std::endl;
-  routes.insert({path, f});
+  routes.insert({path, handler});
+}
+
+// TODO get the subpath?
+std::string Route::execute(Request request, Response response,
+                           const std::string &path) {
+  return "{\"msg\" : \"TODO response!\"}";
 }
 
 void Route::prettyPrint() {
@@ -19,4 +25,4 @@ void Route::prettyPrint() {
 
 std::string handle404() { return "{\"msg\" : \"Route not found!\"}"; }
 
-FUNCTION Route::return404() { return handle404; }
+std::string Route::return404() { return handle404(); }

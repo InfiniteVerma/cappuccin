@@ -57,27 +57,31 @@ int Server::listen() {
     ssize_t valread = read(client_socket, buffer, 1024);
     printf("%s\n", buffer);
 
-    // TODO parse request
-    FUNCTION handlerFunc = parseRequest(buffer);
-
-    std::string response = handlerFunc();
+    // parse the request
+    // 1. VERB
+    // 2. path
+    // 3. body
+    // 4. other stuff
+    std::string response = parseRequestAndRespond(buffer);
 
     std::cout << "Server::listen sending response: " << response << std::endl;
 
     char responseBuffer[1024] = {0};
     std::string responseFirst = "HTTP/1.1 200 OK\r\n"
-                  "Content-Type: application/json\r\n\r\n";
+                                "Content-Type: application/json\r\n\r\n";
 
     std::string finalResponse = responseFirst + response;
 
     strcpy(responseBuffer, finalResponse.c_str());
 
-    std::cout << "Server::listen sendingResponse: " << responseBuffer << std::endl;
+    std::cout << "Server::listen sendingResponse: " << responseBuffer
+              << std::endl;
 
     std::cout << "Server::listen processed request" << std::endl;
 
     // TODO send response back to socket
-    ssize_t valsend = send(client_socket, responseBuffer, finalResponse.length(), 0);
+    ssize_t valsend =
+        send(client_socket, responseBuffer, finalResponse.length(), 0);
 
     close(client_socket); // Close the client socket after sending the response
   }
@@ -123,7 +127,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 }
  *
  */
-FUNCTION Server::parseRequest(const std::string &request) {
+std::string Server::parseRequestAndRespond(const std::string &request) {
 
   // search through the route list and return a handler. if not found?
   // search for VERB
@@ -185,6 +189,16 @@ FUNCTION Server::parseRequest(const std::string &request) {
 
     // Found route. Now returning it's routeHandler
     std::cout << "Found route!" << std::endl;
+
+    // TODO pass the body to the routeHandler which will give me the std::string
+    // response
+    Route route = it->second;
+    // TODO fix below
+    Request request;
+    Response response;
+    std::string resp = route.execute(request, response, routePath);
+    std::cout << "Returning response " << std::endl;
+    return resp;
   } else {
 
     // Not found path. Returning 404 response

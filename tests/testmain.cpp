@@ -13,7 +13,14 @@ void dummyClient();
 void runServer();
 
 // Controllers
-void getData() { cout << "THIS IS RESPONSE"; }
+std::string getData(Request request, Response response) 
+{ 
+    //response.setStatusCode(200);
+    //response.setHeader("Content-Type", "text/html");
+    //response.setJson("{\"message\": \"Hello World\"}");
+    //response.send();
+    return "TODO getData";
+}
 // ------------------
 
 Route testRoutes() {

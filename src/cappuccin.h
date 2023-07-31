@@ -3,6 +3,8 @@
 
 #include "route.h"
 #include "server.h"
+#include "request.h"
+#include "response.h"
 
 class Cappuccin {
 
