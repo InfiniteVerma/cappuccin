@@ -42,6 +42,7 @@ int Server::listen() {
     return -1;
   }
 
+  // use select/poll
   while (true) {
 
     int client_socket =
@@ -79,7 +80,6 @@ int Server::listen() {
 
     std::cout << "Server::listen processed request" << std::endl;
 
-    // TODO send response back to socket
     ssize_t valsend =
         send(client_socket, responseBuffer, finalResponse.length(), 0);
 
