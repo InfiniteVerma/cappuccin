@@ -129,7 +129,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
  */
 std::string Server::parseRequestAndRespond(const std::string &request) {
 
-  // search through the route list and return a handler. if not found?
+  // search through the route list and return a handler. TODO if not found?
   // search for VERB
   std::string tempRequest = request;
   bool isGet = false; // TODO make this enum
@@ -142,6 +142,7 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
   }
 
   if (request[0] == 'G') {
+    // TODO match entire GET first
     std::cout << "Considering it a get request" << std::endl;
 
     // consume "GET "
@@ -171,11 +172,22 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
   tempRequest = tempRequest.substr(1);
 
   size_t spacePos = tempRequest.find(" ");
+  size_t nextSlashPos = tempRequest.find("/");
   std::string routePath = "";
+  std::string subPath = ""; // contains the rest of the path
 
-  if (spacePos != std::string::npos) {
+  // if it's a nested path: /hello/asdf or /hello/olala, we need to search till first / only
+  // if there's a / before a space, get till before that string
+  if(nextSlashPos != std::string::npos && nextSlashPos < spacePos) {
+
+      std::cout << "has a slash" << std::endl;
+      routePath = tempRequest.substr(0, nextSlashPos);
+      subPath = tempRequest.substr(nextSlashPos, spacePos);
+  }
+  else if (spacePos != std::string::npos) {
+
+    std::cout << "Without a slash!" << std::endl;
     routePath = tempRequest.substr(0, spacePos);
-    tempRequest = tempRequest.substr(spacePos + 1);
   } else {
     std::cout << "ERR: INVALID REQUEST TODO" << std::endl;
     return Route::return404();
@@ -183,8 +195,14 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
 
   // Finding path from registered routes
 
-  auto it = routes.find(routePath);
-  std::cout << "Searching for routePath " << routePath << std::endl;
+  auto it = routes.find(routePath); // TODO this should search till first /
+  std::cout << "Searching for routePath :" << routePath << ": subPath :" << subPath << ":" << std::endl;
+
+  std::cout << "\nExisting routes:\n";
+  for(auto temp : routes) {
+      std::cout << temp.first << "\n";
+  }
+  std::cout << "\n\n";
   if (it != routes.end()) {
 
     // Found route. Now returning it's routeHandler
@@ -196,7 +214,7 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
     // TODO fix below
     Request request;
     Response response;
-    std::string resp = route.execute(request, response, routePath);
+    std::string resp = route.execute(request, response, routePath, subPath);
     std::cout << "Returning response " << std::endl;
     return resp;
   } else {

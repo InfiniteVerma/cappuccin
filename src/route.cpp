@@ -6,9 +6,9 @@ void Route::get(const std::string &path, FUNCTION handler) {
   routes.insert({path, handler});
 }
 
-// TODO get the subpath?
 std::string Route::execute(Request request, Response response,
-                           const std::string &path) {
+                           const std::string &path, const std::string &subPath) {
+  std::cout << "TODO not coded!" << std::endl;
   return "{\"msg\" : \"TODO response!\"}";
 }
 

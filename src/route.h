@@ -23,7 +23,7 @@ public:
   // TODO pass custom message?
   static std::string return404();
 
-  std::string execute(Request request, Response response, const std::string &path);
+  std::string execute(Request request, Response response, const std::string &path, const std::string &subPath);
 };
 
 #endif // !HTTP_ROUTE
