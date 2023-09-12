@@ -6,8 +6,16 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include "logger.h"
+
+#ifdef THIS_BLOCK
+#undef THIS_BLOCK
+#endif
+#define THIS_BLOCK "Server::"
 
 int Server::listen() {
+
+  Logger::getInstance().Log("Server:: BEGIN");
 
   int fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -65,7 +73,7 @@ int Server::listen() {
     // 4. other stuff
     std::string response = parseRequestAndRespond(buffer);
 
-    std::cout << "Server::listen sending response: " << response << std::endl;
+    Logger::getInstance().Log("Server::listen sending response: " + response);
 
     char responseBuffer[1024] = {0};
     std::string responseFirst = "HTTP/1.1 200 OK\r\n"
@@ -75,10 +83,9 @@ int Server::listen() {
 
     strcpy(responseBuffer, finalResponse.c_str());
 
-    std::cout << "Server::listen sendingResponse: " << responseBuffer
-              << std::endl;
+    Logger::getInstance().Log("Server::listen sendingResponse: " + std::string(responseBuffer));
 
-    std::cout << "Server::listen processed request" << std::endl;
+    Logger::getInstance().Log("Server::listen processed request");
 
     ssize_t valsend =
         send(client_socket, responseBuffer, finalResponse.length(), 0);
@@ -86,31 +93,31 @@ int Server::listen() {
     close(client_socket); // Close the client socket after sending the response
   }
 
+  Logger::getInstance().Log("Server:: END");
   return 0;
 }
 
 void Server::use(const std::string &path, Route route) {
 
-  std::cout << "Server::use BEGIN path: " << path << std::endl;
+  Logger::getInstance().Log("Server::use BEGIN path: " + path);
 
   if (path.size() < 1) {
-    std::cout << "Invalid path. Path should be atleast 2 in length? TODO THROW "
-                 "ERROR?\n";
+    Logger::getInstance().Log("Invalid path. Path should be atleast 2 in length? TODO THROW ERROR?");
     return;
   }
 
   std::string copyPath = path;
   copyPath.erase(0, 1);
 
-  std::cout << "Adding route: " << copyPath << std::endl;
-  std::cout << "This has below controllers: " << std::endl;
+  Logger::getInstance().Log("Adding route: " + copyPath);
+  Logger::getInstance().Log("This has below controllers: ");
 
   route.prettyPrint();
 
   // add it to list
   routes.insert(std::pair<std::string, Route>(copyPath, route));
 
-  std::cout << "Server::use END" << std::endl;
+  Logger::getInstance().Log("Server::use END");
 }
 
 /*
@@ -143,7 +150,7 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
 
   if (request[0] == 'G') {
     // TODO match entire GET first
-    std::cout << "Considering it a get request" << std::endl;
+    Logger::getInstance().Log("Considering it a get request");
 
     // consume "GET "
     if (request.length() > 4) {
@@ -155,16 +162,16 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
     isGet = true;
 
   } else if (request[0] == 'P' && request[1] == 'O') {
-    std::cout << "Considering it a port request" << std::endl;
+    Logger::getInstance().Log("Considering it a port request");
   } else if (request[0] == 'P' && request[1] == 'U') {
-    std::cout << "Considering it a put request" << std::endl;
+    Logger::getInstance().Log("Considering it a put request");
   } else if (request[0] == 'D') {
-    std::cout << "Considering it a delete request" << std::endl;
+    Logger::getInstance().Log("Considering it a delete request");
   } else {
-    std::cout << "Considering it a patch request" << std::endl;
+    Logger::getInstance().Log("Considering it a patch request");
   }
 
-  std::cout << "Finding request: " << tempRequest << std::endl;
+  Logger::getInstance().Log("Finding request: " + tempRequest);
 
   // Next, getting path from the request
 
@@ -180,31 +187,30 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
   // if there's a / before a space, get till before that string
   if(nextSlashPos != std::string::npos && nextSlashPos < spacePos) {
 
-      std::cout << "has a slash" << std::endl;
-      std::cout << "space :" << spacePos << " : nextSlashPos" << nextSlashPos << std::endl;
+      Logger::getInstance().Log("has a slash");
+//      Logger::getInstance().Log("space :" << std::to_string(spacePos) << " : nextSlashPos" << std::to_string(nextSlashPos));
       routePath = tempRequest.substr(0, nextSlashPos);
       subPath = tempRequest.substr(nextSlashPos, spacePos - nextSlashPos);
   }
   else if (spacePos != std::string::npos) {
 
-      std::cout << "Without a slash!" << std::endl;
+      Logger::getInstance().Log("Without a slash!");
       routePath = tempRequest.substr(0, spacePos);
       subPath = "/";
   } else {
-      std::cout << "ERR: INVALID REQUEST TODO" << std::endl;
+      Logger::getInstance().Log("ERR: INVALID REQUEST TODO");
       return Route::return404();
   }
 
   // Finding path from registered routes
 
   auto it = routes.find(routePath);
-  std::cout << "Searching for routePath :" << routePath << ": subPath :" << subPath << ":" << std::endl;
+//  Logger::getInstance().Log("Searching for routePath :" << routePath << ": subPath :" << subPath << ":");
 
-  std::cout << "\n\n";
   if (it != routes.end()) {
 
     // Found route. Now returning it's routeHandler
-    std::cout << "Found route!" << std::endl;
+    Logger::getInstance().Log("Found route!");
 
     // TODO pass the body to the routeHandler which will give me the std::string
     // response
@@ -213,12 +219,12 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
     Request request;
     Response response;
     std::string resp = route.execute(request, response, routePath, subPath);
-    std::cout << "Returning response " << std::endl;
+    Logger::getInstance().Log("Returning response ");
     return resp;
   } else {
 
     // Not found path. Returning 404 response
-    std::cout << "Not found it->second" << std::endl;
+    Logger::getInstance().Log("Not found it->second");
   }
 
   // TODO do something about this
