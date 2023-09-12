@@ -181,16 +181,18 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
   if(nextSlashPos != std::string::npos && nextSlashPos < spacePos) {
 
       std::cout << "has a slash" << std::endl;
+      std::cout << "space :" << spacePos << " : nextSlashPos" << nextSlashPos << std::endl;
       routePath = tempRequest.substr(0, nextSlashPos);
-      subPath = tempRequest.substr(nextSlashPos, spacePos);
+      subPath = tempRequest.substr(nextSlashPos, spacePos - nextSlashPos);
   }
   else if (spacePos != std::string::npos) {
 
-    std::cout << "Without a slash!" << std::endl;
-    routePath = tempRequest.substr(0, spacePos);
+      std::cout << "Without a slash!" << std::endl;
+      routePath = tempRequest.substr(0, spacePos);
+      subPath = "/";
   } else {
-    std::cout << "ERR: INVALID REQUEST TODO" << std::endl;
-    return Route::return404();
+      std::cout << "ERR: INVALID REQUEST TODO" << std::endl;
+      return Route::return404();
   }
 
   // Finding path from registered routes
@@ -198,10 +200,6 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
   auto it = routes.find(routePath); // TODO this should search till first /
   std::cout << "Searching for routePath :" << routePath << ": subPath :" << subPath << ":" << std::endl;
 
-  std::cout << "\nExisting routes:\n";
-  for(auto temp : routes) {
-      std::cout << temp.first << "\n";
-  }
   std::cout << "\n\n";
   if (it != routes.end()) {
 
