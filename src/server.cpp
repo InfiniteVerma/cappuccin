@@ -197,7 +197,7 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
 
   // Finding path from registered routes
 
-  auto it = routes.find(routePath); // TODO this should search till first /
+  auto it = routes.find(routePath);
   std::cout << "Searching for routePath :" << routePath << ": subPath :" << subPath << ":" << std::endl;
 
   std::cout << "\n\n";

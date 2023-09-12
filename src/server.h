@@ -11,6 +11,10 @@ typedef std::string (*FUNCTION)(Request, Response);
 class Server {
 private:
   const int PORT = 8080;
+
+  /*
+   * Holds all the registered routes with their route handlers
+   */
   std::map<std::string, Route> routes;
 
 public:
