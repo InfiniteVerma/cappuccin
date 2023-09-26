@@ -4,6 +4,8 @@
 #include <string>
 #include <fstream>
 
+#define LOG(str) Logger::getInstance().Log(str)
+
 class Logger {
 
 public:

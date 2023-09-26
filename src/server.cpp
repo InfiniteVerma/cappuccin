@@ -15,7 +15,7 @@
 
 int Server::listen() {
 
-  Logger::getInstance().Log("Server:: BEGIN");
+  LOG("Server:: Begin");
 
   int fd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -73,7 +73,7 @@ int Server::listen() {
     // 4. other stuff
     std::string response = parseRequestAndRespond(buffer);
 
-    Logger::getInstance().Log("Server::listen sending response: " + response);
+    LOG("Server::listen sending response: " + response);
 
     char responseBuffer[1024] = {0};
     std::string responseFirst = "HTTP/1.1 200 OK\r\n"
@@ -83,9 +83,9 @@ int Server::listen() {
 
     strcpy(responseBuffer, finalResponse.c_str());
 
-    Logger::getInstance().Log("Server::listen sendingResponse: " + std::string(responseBuffer));
+    LOG("Server::listen sendingResponse: " + std::string(responseBuffer));
 
-    Logger::getInstance().Log("Server::listen processed request");
+    LOG("Server::listen processed request");
 
     ssize_t valsend =
         send(client_socket, responseBuffer, finalResponse.length(), 0);
@@ -93,31 +93,31 @@ int Server::listen() {
     close(client_socket); // Close the client socket after sending the response
   }
 
-  Logger::getInstance().Log("Server:: END");
+  LOG("Server:: END");
   return 0;
 }
 
 void Server::use(const std::string &path, Route route) {
 
-  Logger::getInstance().Log("Server::use BEGIN path: " + path);
+  LOG("Server::use BEGIN path: " + path);
 
   if (path.size() < 1) {
-    Logger::getInstance().Log("Invalid path. Path should be atleast 2 in length? TODO THROW ERROR?");
+    LOG("Invalid path. Path should be atleast 2 in length? TODO THROW ERROR?");
     return;
   }
 
   std::string copyPath = path;
   copyPath.erase(0, 1);
 
-  Logger::getInstance().Log("Adding route: " + copyPath);
-  Logger::getInstance().Log("This has below controllers: ");
+  LOG("Adding route: " + copyPath);
+  LOG("This has below controllers: ");
 
   route.prettyPrint();
 
   // add it to list
   routes.insert(std::pair<std::string, Route>(copyPath, route));
 
-  Logger::getInstance().Log("Server::use END");
+  LOG("Server::use END");
 }
 
 /*
@@ -150,7 +150,7 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
 
   if (request[0] == 'G') {
     // TODO match entire GET first
-    Logger::getInstance().Log("Considering it a get request");
+    LOG("Considering it a get request");
 
     // consume "GET "
     if (request.length() > 4) {
@@ -162,16 +162,16 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
     isGet = true;
 
   } else if (request[0] == 'P' && request[1] == 'O') {
-    Logger::getInstance().Log("Considering it a port request");
+    LOG("Considering it a port request");
   } else if (request[0] == 'P' && request[1] == 'U') {
-    Logger::getInstance().Log("Considering it a put request");
+    LOG("Considering it a put request");
   } else if (request[0] == 'D') {
-    Logger::getInstance().Log("Considering it a delete request");
+    LOG("Considering it a delete request");
   } else {
-    Logger::getInstance().Log("Considering it a patch request");
+    LOG("Considering it a patch request");
   }
 
-  Logger::getInstance().Log("Finding request: " + tempRequest);
+  LOG("Finding request: " + tempRequest);
 
   // Next, getting path from the request
 
@@ -187,30 +187,30 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
   // if there's a / before a space, get till before that string
   if(nextSlashPos != std::string::npos && nextSlashPos < spacePos) {
 
-      Logger::getInstance().Log("has a slash");
-//      Logger::getInstance().Log("space :" << std::to_string(spacePos) << " : nextSlashPos" << std::to_string(nextSlashPos));
+      LOG("has a slash");
+//      LOG("space :" << std::to_string(spacePos) << " : nextSlashPos" << std::to_string(nextSlashPos));
       routePath = tempRequest.substr(0, nextSlashPos);
       subPath = tempRequest.substr(nextSlashPos, spacePos - nextSlashPos);
   }
   else if (spacePos != std::string::npos) {
 
-      Logger::getInstance().Log("Without a slash!");
+      LOG("Without a slash!");
       routePath = tempRequest.substr(0, spacePos);
       subPath = "/";
   } else {
-      Logger::getInstance().Log("ERR: INVALID REQUEST TODO");
+      LOG("ERR: INVALID REQUEST TODO");
       return Route::return404();
   }
 
   // Finding path from registered routes
 
   auto it = routes.find(routePath);
-//  Logger::getInstance().Log("Searching for routePath :" << routePath << ": subPath :" << subPath << ":");
+//  LOG("Searching for routePath :" << routePath << ": subPath :" << subPath << ":");
 
   if (it != routes.end()) {
 
     // Found route. Now returning it's routeHandler
-    Logger::getInstance().Log("Found route!");
+    LOG("Found route!");
 
     // TODO pass the body to the routeHandler which will give me the std::string
     // response
@@ -219,12 +219,12 @@ std::string Server::parseRequestAndRespond(const std::string &request) {
     Request request;
     Response response;
     std::string resp = route.execute(request, response, routePath, subPath);
-    Logger::getInstance().Log("Returning response ");
+    LOG("Returning response ");
     return resp;
   } else {
 
     // Not found path. Returning 404 response
-    Logger::getInstance().Log("Not found it->second");
+    LOG("Not found it->second");
   }
 
   // TODO do something about this
