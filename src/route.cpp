@@ -1,4 +1,5 @@
 #include "route.h"
+#include "logger.h"
 #include <iostream>
 
 void Route::get(const std::string &path, FUNCTION handler) {
@@ -26,14 +27,14 @@ std::string Route::execute(Request request, Response response,
 }
 
 void Route::prettyPrint() {
-    std::cout << "Printing routes added to this route object: \n";
+    LOG("Printing routes added to this route object");
     int i = 1;
     for (auto it = routes.begin(); it != routes.end(); ++it) {
 
-        std::cout << i << ": " << it->first << std::endl;
+        //LOG(i << ": " << it->first );
         ++i;
     }
-    std::cout << "-------------------------------------------" << std::endl;
+    LOG("-------------------------------------------" );
 }
 
 std::string handle404() { return "{\"msg\" : \"Route not found!\"}"; }
