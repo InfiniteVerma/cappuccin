@@ -5,20 +5,20 @@
 #define LOG(x) logger->writeLog(x)
 
 void Route::get(const std::string &path, FUNCTION handler) {
-    std::cout << "Route::get called with path " << path << std::endl;
+    LOG("Route::get called with path " + path);
     routes.insert({path, handler});
 }
 
 std::string Route::execute(Request request, Response response,
         const std::string &path, const std::string &subPath) {
     
-    std::cout << "Route::execute BEGIN " << path << ": subPath :" << subPath << ":" << std::endl;
+    LOG("Route::execute BEGIN " + path + ": subPath :" + subPath + ":");
     // reached here after finding route base url. 
     // Now searching for specific subpath
 
     for (auto it = routes.begin(); it != routes.end(); ++it) {
         if(it->first == subPath) {
-            std::cout << "Found subpath! " << it->first << ":" << std::endl;
+            LOG("Found subpath! " + it->first + ":");
 
             FUNCTION hlr = it->second;
             return hlr(request, response);

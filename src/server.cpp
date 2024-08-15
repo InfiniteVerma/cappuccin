@@ -3,6 +3,7 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <string.h>
+#include <string>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -17,7 +18,7 @@
 
 int Server::listen() {
 
-  LOG("Server:: Begin");
+  LOG("Server:: Begin at port: " + std::to_string(PORT));
 
   int fd = socket(AF_INET, SOCK_STREAM, 0);
 

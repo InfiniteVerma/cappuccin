@@ -45,6 +45,7 @@ Route testRoutes() {
 
 int main() {
   std::thread server(runServer);
+  sleep(1);
   std::thread client(dummyClient);
 
   server.join();
@@ -103,4 +104,5 @@ void dummyClient() {
   std::cout << "DONE" << std::endl;
 
   close(client_socket);
+  cout << "STOPPING CLIENT" << std::endl;
 }
