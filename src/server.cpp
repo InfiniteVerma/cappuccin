@@ -13,7 +13,7 @@
 #endif
 #define THIS_BLOCK "Server::"
 
-#define LOG(x) logger->writeLog(x, DEBUG)
+#define LOG(x) logger->writeLog(x)
 
 int Server::listen() {
 
