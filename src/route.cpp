@@ -2,6 +2,8 @@
 #include "logger.h"
 #include <iostream>
 
+#define LOG(x) logger->writeLog(x)
+
 void Route::get(const std::string &path, FUNCTION handler) {
     std::cout << "Route::get called with path " << path << std::endl;
     routes.insert({path, handler});

@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 #include "route.h"
+#include "logger.h"
 
 // typedef void (*routeHandler)(); TODO move this somewhere else?
 typedef std::string (*FUNCTION)(Request, Response);
@@ -11,6 +12,7 @@ typedef std::string (*FUNCTION)(Request, Response);
 class Server {
 private:
   const int PORT = 8080;
+  Logger* logger;
 
   /*
    * Holds all the registered routes with their route handlers
@@ -23,6 +25,8 @@ public:
    *
    */
   int listen();
+
+  Server(Logger* log) : logger(log) {}
 
   /*
    * Add a route // TODO update this comment

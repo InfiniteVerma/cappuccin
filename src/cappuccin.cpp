@@ -1,7 +1,8 @@
 #include "cappuccin.h"
+#include "logger.h"
 
 Cappuccin::Cappuccin() {
-    
+    logger = new Logger("cappuccin");
 }
 
 Cappuccin &Cappuccin::getInstance() {
@@ -12,6 +13,6 @@ Cappuccin &Cappuccin::getInstance() {
   return instance;
 }
 
-Server Cappuccin::createApplication() { return Server(); }
+Server Cappuccin::createApplication() { return Server(logger); }
 
-Route Cappuccin::createRoute() { return Route(); }
+Route Cappuccin::createRoute() { return Route(logger); }

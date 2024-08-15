@@ -5,6 +5,7 @@
 #include "server.h"
 #include "request.h"
 #include "response.h"
+#include "logger.h"
 
 class Cappuccin {
 
@@ -39,6 +40,8 @@ private:
    * Making constructor private to make this a singleton class
    */
   Cappuccin();
+
+  Logger* logger;
 };
 
 #endif /* CAPPUCCIN_H */
