@@ -1,0 +1,3 @@
+[submodule "external/logger"]
+	path = external/logger
+	url = git@github.com:InfiniteVerma/components.git
